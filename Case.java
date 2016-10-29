@@ -21,7 +21,7 @@ abstract class Case {
 	public Case(){
 		
 	}
-	public Case(int coordonneeX,int coordonneeY,int positionX,int positionY){
+	public Case(int coordonneeX,int coordonneeY){
 		
 		this.coordonneeX=coordonneeX;
 		this.coordonneeY=coordonneeY;
