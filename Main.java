@@ -57,8 +57,9 @@ public class Main {
 							System.out.print(alphabet[i-1]+"  ");
 						}
 						else{
-							int indice=(int) i/26;
-							System.out.print(alphabet[indice-1]+alphabet[i%26-1]+" ");
+							int indice=(int) (i-0.1)/26;//petite triche pour avoir AZ puis BA et non BZ puis BA
+							System.out.print(alphabet[indice-1]);
+							System.out.print(alphabet[(i-1)%26]+" ");
 						}
 					}
 					else{
