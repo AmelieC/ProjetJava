@@ -7,6 +7,7 @@ package projet;
 public class Main {
 	static int nbColonnes;
 	static int nbLignes;
+	static String[] alphabet={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
 	/**
 	 * @param args
 	 */
@@ -52,11 +53,12 @@ public class Main {
 				}
 				else{
 					if(j==0){
-						if(i<10){
-							System.out.print(i+"  ");
+						if(i<=26){	
+							System.out.print(alphabet[i-1]+"  ");
 						}
 						else{
-							System.out.print(i+" ");
+							int indice=(int) i/26;
+							System.out.print(alphabet[indice-1]+alphabet[i%26-1]+" ");
 						}
 					}
 					else{
@@ -82,3 +84,4 @@ public class Main {
 		
 	}
 }
+
