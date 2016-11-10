@@ -44,18 +44,23 @@ public class Bateau {
 	public String getNom() {
 		return nom;
 	}
+	
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
+	
 	public int getTaille() {
 		return taille;
 	}
+	
 	public void setTaille(int taille) {
 		this.taille = taille;
 	}
+	
 	public CaseJeu[] getPosition() {
 		return position;
 	}
+	
 	public void setPosition(CaseJeu[] position) {
 		this.position = position;
 		for(CaseJeu a:position){
