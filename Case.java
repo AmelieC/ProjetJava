@@ -15,8 +15,6 @@ public class Case {
 	 * 
 	 * @param coordonneeX
 	 * @param coordonneeY
-	 * @param positionX
-	 * @param positionY
 	 */
 	public Case(){
 		
