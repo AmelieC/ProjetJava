@@ -5,11 +5,11 @@ package projet;
  * @author kevin
  *
  */
-abstract class Case {
+public class Case {
 	protected int coordonneeX;
 	protected int coordonneeY;
-	protected boolean estUtilisee;
-	protected boolean estDetruite;
+	protected boolean estUtilisee = false;
+	protected boolean estDetruite = false;
 	
 	/**
 	 * 
@@ -42,13 +42,13 @@ abstract class Case {
 	public void setCoordonneeY(int coordonneeY) {
 		this.coordonneeY = coordonneeY;
 	}
-	public boolean isEstUtilisee() {
+	public boolean estUtilisee() {
 		return estUtilisee;
 	}
 	public void setEstUtilisee(boolean estUtilisee) {
 		this.estUtilisee = estUtilisee;
 	}
-	public boolean isEstDetruite() {
+	public boolean estDetruite() {
 		return estDetruite;
 	}
 	public void setEstDetruite(boolean estDetruite) {
