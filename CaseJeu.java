@@ -15,12 +15,10 @@ public class CaseJeu extends Case {
 	 * 
 	 * @param coordonneeX
 	 * @param coordonneeY
-	 * @param positionX
-	 * @param positionY
 	 */
-	public CaseJeu(int coordonneeX,int coordonneeY,int positionX,int positionY){
+	public CaseJeu(int coordonneeX,int coordonneeY){
 		
-		super(coordonneeX,coordonneeY,positionX,positionY);
+		super(coordonneeX,coordonneeY);
 		super.estUtilisee=false;
 		super.estDetruite=false;
 		
