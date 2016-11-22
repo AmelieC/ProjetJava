@@ -10,6 +10,7 @@ public class Case {
 	protected int coordonneeY;
 	protected boolean estUtilisee = false;
 	protected boolean estDetruite = false;
+	protected Bateau bateau;
 	
 	/**
 	 * 
@@ -53,5 +54,12 @@ public class Case {
 		this.estDetruite = estDetruite;
 	}
 	
+	public Bateau getBateau () {
+		return bateau;
+	}
 	
+	public void setBateau (Bateau bateau){
+		this.bateau = bateau;
+	}
+		
 }
