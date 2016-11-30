@@ -12,18 +12,23 @@ public class BatailleController {
 	private GrilleJeuModel	grilleJeuModel;
 	private JoueurModel joueurModel;
 	
+	private GrilleJeuModel	grilleJeuModelB;
+	private JoueurModel joueurModelB;
+	
 	private BatailleVue view = null;
 
-	public BatailleController(GrilleJeuModel grilleJeuModel,JoueurModel joueurModel){
+	public BatailleController(GrilleJeuModel grilleJeuModel,JoueurModel joueurModel,GrilleJeuModel grilleJeuModeB,JoueurModel joueurModelB){
 		
 		this.grilleJeuModel = grilleJeuModel;
 		this.joueurModel = joueurModel;
+		this.grilleJeuModelB = grilleJeuModelB;
+		this.joueurModelB = joueurModelB;
 	}
 	/**
 	 * Cette méthode positionne les navires du joueur lorsque celui-ci entre des coordonées
 	 * @param valeur
 	 */
-	public void positionner(String valeur){
+	public void positionner(String valeur,int nbBateau,int indiceBateau,JoueurModel joueurModel){
 		int [] resultat;
 		resultat = decodeur(valeur);
 		if(!verifPosition(resultat)){
@@ -32,7 +37,7 @@ public class BatailleController {
 		else{
 			joueurModel.getGrilleJeu().setEstUtilisee(true,resultat[0], resultat[1]);;
 			//afficherGrillePerso();
-			//joueurModel.getBateau()[nbBateau].setPositionToIndex(joueurModel.getGrilleJeu().getTabCase()[resultat[0]][resultat[1]], indiceBateau);
+			joueurModel.getBateau()[nbBateau].setPositionToIndex(joueurModel.getGrilleJeu().getTabCase()[resultat[0]][resultat[1]], indiceBateau);
 			
 			//if(joueurModel.getBateau()[nbBateau].getTaille()==indiceBateau)
 		}
@@ -64,6 +69,19 @@ public class BatailleController {
 			i++;
 		}
 		return true;
+	}
+	public void tirer(String valeur){ //a modifier pour une utilisation a 2 joueur
+		int [] resultat;
+		resultat = decodeur(valeur);
+		if(joueurModelB.getGrilleJeu().getTabCase()[resultat[0]][resultat[1]].isEstUtilisee()){
+			System.out.println("TOUCHE");
+			joueurModelB.getGrilleJeu().setEstDetruite(true, resultat[0], resultat[1]);
+		}
+		else{
+			System.out.println("X");
+			joueurModelB.getGrilleJeu().setEstDetruite(true, resultat[0], resultat[1]);
+		}
+		
 	}
 	/**
 	 * Transforme une entrée utilisateur (par exemple A-5) en indice pour le tableau à 2 dimensions
@@ -101,7 +119,7 @@ public class BatailleController {
 		return Resultat;
 		
 	}
-	public void afficherGrillePerso(){
+	public void afficherGrillePerso(JoueurModel joueurModel){
 		for(int i=0;i<Main.nbLignes;i++){
 			for(int j=0;j<Main.nbColonnes;j++){
 				if(i==0){//première ligne
@@ -155,7 +173,7 @@ public class BatailleController {
  * Si une case détruite ne possède pas de navire, on affichera X
  * @param joueur
  */
-public void afficherGrilleCible(){
+public void afficherGrilleCible(JoueurModel joueurModel){
 	for(int i=0;i<Main.nbLignes;i++){
 		for(int j=0;j<Main.nbColonnes;j++){
 			if(i==0){//première ligne
@@ -183,14 +201,14 @@ public void afficherGrilleCible(){
 					}
 				}
 				else{
-					if(!joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee()){
-						System.out.print("~ ");
+					if(!joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee() && !joueurModel.getGrilleJeu().getTabCase()[i][j].isEstDetruite()){
+						System.out.print("~  ");
 					}
 					else if(joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleJeu().getTabCase()[i][j].isEstDetruite()){
 						System.out.print("T  ");
 					}
 					else if(joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee()){
-						System.out.print("~ "); //Le joueur ne peut pas voir la posision de navires ennemis 
+						System.out.print("~  "); //Le joueur ne peut pas voir la posision de navires ennemis 
 					}
 					else if(!joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleJeu().getTabCase()[i][j].isEstDetruite()){
 						System.out.print("X  ");
@@ -199,6 +217,49 @@ public void afficherGrilleCible(){
 			}
 		}
 		System.out.print("\n");
+	}
+}
+public static void positionOrdinateur(JoueurModel joueur){
+	double vertOrHori;
+	int caseInitX;
+	int caseInitY;
+	int i=0;
+	int j=0;
+	while(i<6){
+		vertOrHori=Math.random();
+		caseInitX=1+(int)(Math.random()*Main.nbColonnes-1);
+		caseInitY=1+(int)(Math.random()*Main.nbLignes-1);
+		while(j<joueur.getBateau()[i].getTaille()){
+			if(j==0){
+				joueur.getGrilleJeu().getTabCase()[caseInitX][caseInitY].setEstUtilisee(true);
+				joueur.getBateau()[i].setPositionToIndex(joueur.getGrilleJeu().getTabCase()[caseInitX][caseInitY], j);
+			}
+			else{
+				if(vertOrHori<0.5){ //on positionne verticalement
+					if(caseInitY<joueur.getBateau()[i].getTaille()){ //positionnement descendant
+						joueur.getGrilleJeu().getTabCase()[caseInitX][caseInitY+j].setEstUtilisee(true);
+						joueur.getBateau()[i].setPositionToIndex(joueur.getGrilleJeu().getTabCase()[caseInitX][caseInitY+j], j);
+					}
+					else{//positionnement montant
+						joueur.getGrilleJeu().getTabCase()[caseInitX][caseInitY-j].setEstUtilisee(true);
+						joueur.getBateau()[i].setPositionToIndex(joueur.getGrilleJeu().getTabCase()[caseInitX][caseInitY-j], j);
+					}
+				}
+				else{ //on position horizontalement
+					if(caseInitX<joueur.getBateau()[i].getTaille()){ //positionnement vers la droite
+						joueur.getGrilleJeu().getTabCase()[caseInitX+j][caseInitY].setEstUtilisee(true);
+						joueur.getBateau()[i].setPositionToIndex(joueur.getGrilleJeu().getTabCase()[caseInitX+j][caseInitY], j);
+					}
+					else{//positionnement vers la gauche
+						joueur.getGrilleJeu().getTabCase()[caseInitX-j][caseInitY].setEstUtilisee(true);
+						joueur.getBateau()[i].setPositionToIndex(joueur.getGrilleJeu().getTabCase()[caseInitX-j][caseInitY], j);
+					}
+				}
+			}
+			j++;
+		}
+		j=0;
+		i++;
 	}
 }
 	
