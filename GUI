@@ -1,0 +1,101 @@
+package controller;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Color;
+
+public class GUIProject {
+
+	private JFrame frame;
+	int posx = 0;
+	int posy = 50;
+	int posyy = posy;
+	int cheight = 30;
+	int cwidth = 30;
+	int vCases = 20;
+	int hCases = 20;
+	public static int i;
+	public static int j;
+	protected JButton[][] butt;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUIProject window = new GUIProject();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public GUIProject() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame = new JFrame();
+		butt = new JButton[hCases][vCases];
+
+		frame.setBounds(0, 0, (cwidth+1)*hCases+posx, (cheight+1)*vCases+posy);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JTextArea txtrPlacezVosBateaux = new JTextArea();
+		txtrPlacezVosBateaux.setBackground(new Color(255, 255, 255));
+		txtrPlacezVosBateaux.setText("Placez vos Bateaux, svp!");
+		txtrPlacezVosBateaux.setBounds(10, 11, 309, 22);
+		frame.getContentPane().add(txtrPlacezVosBateaux);
+		
+		/*btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});*/
+		
+		for(i = 0; i<vCases; i++){
+			int posxx = posx;
+			posxx += i*cwidth;
+			for(j = 0; j<hCases; j++){
+				System.out.println(i+" "+j);
+				butt[i][j] = new JButton();
+				butt[i][j].setBounds(posxx, posy+j*cheight, cwidth, cheight);
+				butt[i][j].setBackground(Color.RED);
+				frame.getContentPane().add(butt[i][j]);
+				butt[i][j].addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent e) {
+						butt[i][j].setBackground(Color.GREEN);
+					}
+				});
+				System.out.println(i+" "+j);
+				
+				
+			}
+			
+		}
+	}
+
+}
+/*A faire: faire marcher les events handler.
+*          différencier les phases du jeu. (initialiser / placer / tirer)
+*          lier la code du projet aux bouttons.
+*          
+*/  
