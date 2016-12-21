@@ -1,3 +1,7 @@
+//Avec image en background.
+
+package default_package;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -14,6 +18,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.ImageIcon;
+import java.awt.Font;
 
 public class MenuBataille extends JFrame {
 
@@ -42,7 +48,7 @@ public class MenuBataille extends JFrame {
 	 */
 	public MenuBataille() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 400, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -57,42 +63,61 @@ public class MenuBataille extends JFrame {
 
 		
 		JSpinner tailleQ = new JSpinner(new SpinnerNumberModel(15,10,25,1));
-		tailleQ.setBounds(356, 13, 58, 20);
-		tailleQ.setBackground(new Color(0, 0, 0));
+		tailleQ.setForeground(Color.GREEN);
+		tailleQ.setBounds(235, 110, 58, 20);
+		tailleQ.setBackground(Color.BLACK);
 		panel.add(tailleQ);
 		
-		JLabel lblChoissisezLaTaille = new JLabel("Choissisez la taille de votre quadrillage.");
-		lblChoissisezLaTaille.setBounds(10, 16, 265, 14);
+		JLabel lblChoissisezLaTaille = new JLabel("Taille du quadrillage.");
+		lblChoissisezLaTaille.setForeground(Color.BLACK);
+		lblChoissisezLaTaille.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblChoissisezLaTaille.setBounds(10, 113, 200, 14);
 		panel.add(lblChoissisezLaTaille);
 		
-		JLabel lblChoissisezLadresseIp = new JLabel("Choissisez l'adresse IP de l'adversaire.");
-		lblChoissisezLadresseIp.setBounds(10, 47, 265, 14);
+		JLabel lblChoissisezLadresseIp = new JLabel("Adresse IP de l'adversaire.");
+		lblChoissisezLadresseIp.setForeground(Color.BLACK);
+		lblChoissisezLadresseIp.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblChoissisezLadresseIp.setBounds(10, 144, 200, 14);
 		panel.add(lblChoissisezLadresseIp);
 		
 		textField = new JTextField();
-		textField.setBounds(285, 44, 129, 20);
+		textField.setBackground(Color.GREEN);
+		textField.setBounds(235, 141, 129, 20);
 		panel.add(textField);
 		textField.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Exit");
-		btnNewButton.setBounds(285, 183, 129, 57);
+		btnNewButton.setBackground(Color.GREEN);
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnNewButton.setBounds(235, 284, 129, 57);
 		panel.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Démarrer");
-		btnNewButton_1.setBounds(10, 183, 142, 57);
+		btnNewButton_1.setBackground(Color.GREEN);
+		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnNewButton_1.setBounds(10, 284, 142, 57);
 		panel.add(btnNewButton_1);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(285, 75, 129, 20);
+		textField_1.setBackground(Color.GREEN);
+		textField_1.setBounds(235, 172, 129, 20);
 		panel.add(textField_1);
 		textField_1.setColumns(10);
 		
-		JLabel lblChoisissezLePort = new JLabel("Choisissez le port.");
-		lblChoisissezLePort.setBounds(10, 78, 265, 14);
+		JLabel lblChoisissezLePort = new JLabel("Numero de port.");
+		lblChoisissezLePort.setForeground(Color.BLACK);
+		lblChoisissezLePort.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblChoisissezLePort.setBounds(10, 175, 200, 14);
 		panel.add(lblChoisissezLePort);
 		
 		JCheckBox chckbxMusique = new JCheckBox("Musique?");
-		chckbxMusique.setBounds(317, 102, 97, 23);
+		chckbxMusique.setBackground(Color.GREEN);
+		chckbxMusique.setBounds(235, 199, 97, 23);
 		panel.add(chckbxMusique);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon("C:\\Users\\JOE\\Desktop\\PM400x500px.png"));
+		label.setBounds(0, 0, 374, 452);
+		panel.add(label);
 	}
 }
