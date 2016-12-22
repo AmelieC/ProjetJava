@@ -10,7 +10,6 @@ import java.awt.Insets;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.Observable;
 
 import javax.swing.JButton;
@@ -20,16 +19,14 @@ import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
 import controller.BatailleController;
+import controller.SecondThread;
 import default_package.Main;
-import model.BateauModel;
-import model.CaseModel;
 import model.GrilleJeuModel;
 import model.JoueurModel;
-import view.BatailleGUIPropre.Boutton;
-import view.BatailleGUIPropre.BouttonMarge;
 
-public class BatailleGUICible extends BatailleVueGUI {
+public class BatailleGUICible extends BatailleVueGUI{
 
+	private SecondThread secondThread;
 	private JPanel contentPane;
 	private Boutton[][] tabBoutton;
 	private JTextPane txtpnVeuilezPositionnerVos;
@@ -38,6 +35,7 @@ public class BatailleGUICible extends BatailleVueGUI {
 	public BatailleGUICible(GrilleJeuModel grilleJeuModel,JoueurModel joueurModel,GrilleJeuModel grilleCible,BatailleController controller) {
 		
 		super(grilleJeuModel, joueurModel,grilleCible,controller);
+		secondThread = new SecondThread(controller);
 		tabBoutton = new Boutton[Main.nbLignes][Main.nbColonnes];
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, Main.nbColonnes*21+10, Main.nbLignes*21+58);
@@ -53,7 +51,7 @@ public class BatailleGUICible extends BatailleVueGUI {
 		
 		txtpnVeuilezPositionnerVos = new JTextPane();
 		txtpnVeuilezPositionnerVos.setBackground(SystemColor.inactiveCaption);
-		txtpnVeuilezPositionnerVos.setText("Veuilez Positionner: Porte_avion (0/5)");
+		txtpnVeuilezPositionnerVos.setText("Grille Cible");
 		panel.add(txtpnVeuilezPositionnerVos);
 		
 		JPanel panel_1 = new JPanel();
@@ -93,9 +91,10 @@ public class BatailleGUICible extends BatailleVueGUI {
 					gbc_button.gridy = j;
 					button.setPosx(j);
 					button.setPosy(i);
-					
+					/*
 					button.getButton().addMouseListener(new java.awt.event.MouseAdapter() {
 					    @SuppressWarnings("deprecation")
+					    
 						public void mouseEntered(java.awt.event.MouseEvent evt) {
 					    	if(!button.cochee){
 					    		
@@ -109,6 +108,7 @@ public class BatailleGUICible extends BatailleVueGUI {
 					    			
 					    	
 					    	}
+					    	
 					    	
 					    }
 
@@ -135,42 +135,31 @@ public class BatailleGUICible extends BatailleVueGUI {
 					    	}
 					    	
 					    }
-					});
+					});*/
 					button.getButton().addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent e) {
-							if(!joueurModel.isSonTour()){
-								txtpnVeuilezPositionnerVos.setText("Veuillez attendre votre tour");
 							
-							}
-							else{
-								int [] caseCochee = new int[2];
-								caseCochee [0]= button.getPosx();
-								caseCochee [1]= button.getPosy();
-								String valeur=caseCochee[0]+"-"+caseCochee[1];
-								Main.chat.sendMessage(valeur);
-								joueurModel.setSonTour(false);
-								
-								try {
-									String confirmation = Main.chat.waitForMessage();
-								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+								if(joueurModel.isSonTour()){
+									
+									button.setCochee(true);
+									int [] caseCochee = new int[2];
+									
+									caseCochee [0]= button.getPosx();
+									caseCochee [1]= button.getPosy();
+									
+									String confirm = controller.tirer(caseCochee); //on tire et on récupère la confirmation
+					
+									if(confirm.equals("RATE")){
+										button.getButton().setBackground(new Color(66, 116, 244));//bleu
+									}
+									else{
+										button.getButton().setBackground(new Color(249, 46, 39));
+										System.out.println("frontiere ultime");
+									}
+									 
+									 new SecondThread(controller).start();
+									
 								}
-								String choixAdverse = null;
-								try {
-									choixAdverse = Main.chat.waitForMessage();
-								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								
-								String [] choixAdverseString = (choixAdverse.split("-"));
-								caseCochee[0]=Integer.parseInt(choixAdverseString[0]);
-								caseCochee[1]=Integer.parseInt(choixAdverseString[1]);
-								
-								joueurModel.setSonTour(true);
-								
-							}
 						}
 					});
 					panel_1.add(button.getButton(), gbc_button);
@@ -263,8 +252,26 @@ public class BatailleGUICible extends BatailleVueGUI {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		if(joueurModel.isSonTour()){
+			txtpnVeuilezPositionnerVos.setText("Veuillez choisir votre cible");
+			System.out.println("Votre tour");
+		}
+		else{
+			txtpnVeuilezPositionnerVos.setText("Veuillez attendre votre tour");
+		}
+		for(int i = 0;i<Main.nbColonnes;i++){
+			for(int j = 0;j<Main.nbLignes;j++){
+				
+				if(!joueurModel.getGrilleCible().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleCible().getTabCase()[i][j].isEstDetruite()){
+					tabBoutton[i][j].getButton().setBackground(new Color(66, 116, 244));
+				}
+				else if(joueurModel.getGrilleCible().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleCible().getTabCase()[i][j].isEstDetruite()){
+					tabBoutton[i][j].getButton().setBackground(new Color(216, 41, 41));
+				}
+			}
+		}
 		
 	}
+
 
 }
