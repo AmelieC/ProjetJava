@@ -74,8 +74,8 @@ public class BateauModel extends Observable {
 	}
 	public void setPositionToIndex(CaseModel position,int i){
 		this.position[i]=position;
-		setChanged();
-		notifyObservers();
+		//setChanged();
+		//notifyObservers();
 	}
 	public boolean isEstDetruit() {
 		return estDetruit;
