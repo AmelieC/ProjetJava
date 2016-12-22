@@ -139,7 +139,7 @@ public class BatailleGUICible extends BatailleVueGUI{
 					button.getButton().addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent e) {
 							
-								if(joueurModel.isSonTour()){
+								if(joueurModel.isSonTour() && !Main.finJeu){
 									
 									button.setCochee(true);
 									int [] caseCochee = new int[2];
@@ -153,8 +153,18 @@ public class BatailleGUICible extends BatailleVueGUI{
 										button.getButton().setBackground(new Color(66, 116, 244));//bleu
 									}
 									else{
-										button.getButton().setBackground(new Color(249, 46, 39));
-										System.out.println("frontiere ultime");
+										if(confirm.equals("TOUCHE")){
+											button.getButton().setBackground(new Color(249, 46, 39));
+										}
+										else{
+											joueurModel.setNbBateauEnnemiDetruit(joueurModel.getNbBateauEnnemiDetruit()+1);
+											if(joueurModel.getNbBateauEnnemiDetruit() == 6){
+												Main.finJeu = true;
+												txtpnVeuilezPositionnerVos.setText("!! VOUS AVEZ GAGNE !!");
+											}
+											button.getButton().setBackground(new Color(249, 46, 39));
+										}
+										
 									}
 									 
 									 new SecondThread(controller).start();
@@ -268,6 +278,11 @@ public class BatailleGUICible extends BatailleVueGUI{
 				else if(joueurModel.getGrilleCible().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleCible().getTabCase()[i][j].isEstDetruite()){
 					tabBoutton[i][j].getButton().setBackground(new Color(216, 41, 41));
 				}
+			}
+		}
+		if(Main.finJeu){
+			if(joueurModel.getNbBateauDetruit() == 6){
+				txtpnVeuilezPositionnerVos.setText("VOUS AVEZ PERDU....");	
 			}
 		}
 		
