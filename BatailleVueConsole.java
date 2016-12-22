@@ -33,6 +33,15 @@ public class BatailleVueConsole extends BatailleVue implements Observer{
 			System.out.println("Veuillez positionner:"+joueurModel.getBateau()[joueurModel.getIndiceBateauAPositionner()].getNom()+"   (taille: "+joueurModel.getBateau()[joueurModel.getIndiceBateauAPositionner()].getTaille()+")");
 			
 		}
+		if(Main.finJeu){
+			if(joueurModel.getNbBateauDetruit() == 6){
+				System.out.println("VOUS AVEZ PERDU....");	
+				
+			}
+			else{
+				System.out.println("VOUS AVEZ GAGNE....");	
+			}
+		}	
 		else{
 			if(joueurModel.isSonTour()){
 				
