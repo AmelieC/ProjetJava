@@ -11,6 +11,7 @@ import java.awt.Insets;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.Observable;
 
 import javax.swing.JButton;
@@ -151,11 +152,22 @@ public class BatailleGUIPropre extends BatailleVueGUI{
 								if(controller.positionner(tab,joueurModel.getCaseBateauAPositioner(),joueurModel.getIndiceBateauAPositionner())){
 									button.getButton().setBackground(new Color(71, 67, 64));
 									button.setCochee(true);
+									
+									if(joueurModel.getIndiceBateauAPositionner() == 6 && joueurModel.getCaseBateauAPositioner()==1 && Main.isServer){
+										txtpnVeuilezPositionnerVos.setText("Veuillez attendre votre tour");
+										try {
+											String confirmation = Main.chat.waitForMessage();
+										} catch (IOException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+									}
 								}
 								else{
 									txtpnVeuilezPositionnerVos.setText("Positionnement impossible a cet emplacement !");
 									
 								}
+								
 							}
 						}
 					});
@@ -185,6 +197,9 @@ public class BatailleGUIPropre extends BatailleVueGUI{
 				}
 				else if(joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleJeu().getTabCase()[i][j].isEstDetruite()){
 					tabBoutton[j][i].getButton().setBackground(new Color(0, 0, 0));
+				}
+				else if(!joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleJeu().getTabCase()[i][j].isEstDetruite()){
+					//tabBoutton[j][i].getButton().setBackground(new Color(0, 47, 135));
 				}
 			}
 			
