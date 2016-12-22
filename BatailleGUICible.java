@@ -139,7 +139,7 @@ public class BatailleGUICible extends BatailleVueGUI{
 					button.getButton().addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent e) {
 							
-								if(joueurModel.isSonTour() && !Main.finJeu){
+								if(joueurModel.isSonTour() && !Main.finJeu && !joueurModel.getGrilleCible().getTabCase()[button.getPosy()][button.getPosx()].isEstDetruite()){
 									
 									button.setCochee(true);
 									int [] caseCochee = new int[2];
@@ -283,6 +283,10 @@ public class BatailleGUICible extends BatailleVueGUI{
 		if(Main.finJeu){
 			if(joueurModel.getNbBateauDetruit() == 6){
 				txtpnVeuilezPositionnerVos.setText("VOUS AVEZ PERDU....");	
+				
+			}
+			else{
+				txtpnVeuilezPositionnerVos.setText("VOUS AVEZ GAGNE....");	
 			}
 		}
 		
