@@ -10,9 +10,10 @@ import model.JoueurModel;
 
 public abstract class BatailleVueGUI extends BatailleVue{
 
-	public BatailleVueGUI(GrilleJeuModel grilleJeuModel,JoueurModel joueurModel,BatailleController controller) {
-		super(grilleJeuModel, joueurModel, controller);
+	public BatailleVueGUI(GrilleJeuModel grilleJeuModel,JoueurModel joueurModel,GrilleJeuModel grilleCible,BatailleController controller) {
+		super(grilleJeuModel, joueurModel,grilleCible,controller);
 		// TODO Auto-generated constructor stub
 	}
+	
 
 }
