@@ -12,10 +12,16 @@ import default_package.Main;
 public class JoueurModel extends Observable{
 	
 	private String pseudo;
+	private int nbBateauEnnemiDetruit;
+	private int nbBateauDetruit;
 	private String identifiant;
 	private BateauModel[] bateau;
 	private GrilleJeuModel grilleJeu;
-	private boolean estSonTour;
+	private GrilleJeuModel grilleCible;
+	private int indiceBateauAPositionner;
+	private int caseBateauAPositioner;
+	private boolean sonTour;
+
 	/**
 	 * 
 	 * @param pseudo
@@ -25,8 +31,12 @@ public class JoueurModel extends Observable{
 	 */
 	public JoueurModel(String pseudo,String identifiant){
 		
+		this.nbBateauEnnemiDetruit = 0;
+		this.nbBateauDetruit = 0;
 		this.pseudo=pseudo;
 		this.identifiant=identifiant;
+		this.indiceBateauAPositionner=0;
+		this.caseBateauAPositioner=0;
 		//this.grilleJeu = new GrilleJeuModel(Main.nbColonnes, Main.nbLignes);
 	
 		
@@ -43,6 +53,42 @@ public class JoueurModel extends Observable{
 
 	
 
+	public int getNbBateauEnnemiDetruit() {
+		return nbBateauEnnemiDetruit;
+	}
+
+
+
+	public void setNbBateauEnnemiDetruit(int nbBateauEnnemiDetruit) {
+		this.nbBateauEnnemiDetruit = nbBateauEnnemiDetruit;
+	}
+
+
+
+	public int getNbBateauDetruit() {
+		return nbBateauDetruit;
+	}
+
+
+
+	public void setNbBateauDetruit(int nbBateauDetruit) {
+		this.nbBateauDetruit = nbBateauDetruit;
+	}
+
+
+
+	public GrilleJeuModel getGrilleCible() {
+		return grilleCible;
+	}
+
+
+
+	public void setGrilleCible(GrilleJeuModel grilleCible) {
+		this.grilleCible = grilleCible;
+	}
+
+
+
 	public GrilleJeuModel getGrilleJeu() {
 		return grilleJeu;
 	}
@@ -51,18 +97,6 @@ public class JoueurModel extends Observable{
 
 	public void setGrilleJeu(GrilleJeuModel grilleJeu) {
 		this.grilleJeu = grilleJeu;
-	}
-
-
-
-	public boolean isEstSonTour() {
-		return estSonTour;
-	}
-
-	public void setEstSonTour(boolean estSonTour) {
-		this.estSonTour = estSonTour;
-		setChanged();
-		notifyObservers();
 	}
 
 	public String getPseudo() {
@@ -97,5 +131,56 @@ public class JoueurModel extends Observable{
 	public String toString(){
 		return pseudo+" "+identifiant;
 	}
+	public int[] tirAleatoire(){
+		int[] tab=new int[2];
+		tab[0]=1+(int)(Math.random()*Main.nbLignes-1);
+		tab[1]=1+(int)(Math.random()*Main.nbColonnes-1);
+		
+		return tab;
+	}
+
+
+
+	public int getIndiceBateauAPositionner() {
+		return indiceBateauAPositionner;
+	}
+
+
+
+	public void setIndiceBateauAPositionner(int indiceBateauAPositionner) {
+		this.indiceBateauAPositionner = indiceBateauAPositionner;
+		setChanged();
+		notifyObservers();
+	}
+
+
+
+	public int getCaseBateauAPositioner() {
+		return caseBateauAPositioner;
+		
+	}
+
+
+
+	public void setCaseBateauAPositioner(int caseBateauAPositioner) {
+		this.caseBateauAPositioner = caseBateauAPositioner;
+		setChanged();
+		notifyObservers();
+	}
+
+
+
+	public boolean isSonTour() {
+		return sonTour;
+	}
+
+
+
+	public void setSonTour(boolean sonTour) {
+		this.sonTour = sonTour;
+		setChanged();
+		notifyObservers();
+	}
+	
 	
 }
