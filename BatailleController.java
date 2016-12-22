@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.IOException;
+
 import default_package.Main;
 import model.BateauModel;
 import model.CaseModel;
@@ -21,6 +23,29 @@ public class BatailleController {
 		this.joueurModel = joueurModel;
 		this.grilleCible = grilleCible;
 	}
+	
+	public boolean positionner(int [] valeur,int indiceBateau,int nbBateau){
+		if(!verifPosition(valeur)){
+			System.out.println("Case deja occupee");
+			return false;
+		}
+		else{
+			joueurModel.getGrilleJeu().setEstUtilisee(true,valeur[0], valeur[1]);
+			joueurModel.getGrilleJeu().getTabCase()[valeur[0]][valeur[1]].setBateau(joueurModel.getBateau()[nbBateau]);
+			//afficherGrillePerso();
+			joueurModel.getBateau()[nbBateau].setPositionToIndex(joueurModel.getGrilleJeu().getTabCase()[valeur[0]][valeur[1]], indiceBateau);
+			if(joueurModel.getCaseBateauAPositioner()<joueurModel.getBateau()[joueurModel.getIndiceBateauAPositionner()].getTaille()-1){
+				joueurModel.setCaseBateauAPositioner(joueurModel.getCaseBateauAPositioner()+1);
+			}
+			else{
+				joueurModel.setCaseBateauAPositioner(0);
+				
+				joueurModel.setIndiceBateauAPositionner(joueurModel.getIndiceBateauAPositionner()+1);
+			
+			}
+			return true;
+		}
+	}
 	/**
 	 * Cette méthode positionne les navires du joueur lorsque celui-ci entre des coordonées
 	 * @param valeur
@@ -35,11 +60,18 @@ public class BatailleController {
 		
 		else{
 			joueurModel.getGrilleJeu().setEstUtilisee(true,resultat[0], resultat[1]);
-			joueurModel.getGrilleJeu().getTabCase()[resultat[0]][resultat[0]].setBateau(joueurModel.getBateau()[nbBateau]);
-			//afficherGrillePerso();
+			joueurModel.getGrilleJeu().getTabCase()[resultat[0]][resultat[1]].setBateau(joueurModel.getBateau()[nbBateau]);
 			joueurModel.getBateau()[nbBateau].setPositionToIndex(joueurModel.getGrilleJeu().getTabCase()[resultat[0]][resultat[1]], indiceBateau);
+			if(joueurModel.getCaseBateauAPositioner()<joueurModel.getBateau()[nbBateau].getTaille()-1){
+				joueurModel.setCaseBateauAPositioner(joueurModel.getCaseBateauAPositioner()+1);
+			}
+			else{
+				joueurModel.setCaseBateauAPositioner(0);
+				
+					joueurModel.setIndiceBateauAPositionner(joueurModel.getIndiceBateauAPositionner()+1);
+				
+			}
 			return true;
-			//if(joueurModel.getBateau()[nbBateau].getTaille()==indiceBateau)
 		}
 	}
 	/**
@@ -50,12 +82,28 @@ public class BatailleController {
 	 */
 	public String verifierDegats(int [] valeurs){
 		if(joueurModel.getGrilleJeu().getTabCase()[valeurs[0]][valeurs[1]].isEstUtilisee()){
-			joueurModel.getGrilleJeu().getTabCase()[valeurs[0]][valeurs[1]].setEstDetruite(true);
-			return "TOUCHE";
+			joueurModel.getGrilleJeu().setEstDetruite(true,valeurs[0],valeurs[1]);
+			int verifDetruit = 0;
+			for(int i = 0;i<joueurModel.getGrilleJeu().getTabCase()[valeurs[0]][valeurs[1]].getBateau().getTaille();i++){
+				if(joueurModel.getGrilleJeu().getTabCase()[valeurs[0]][valeurs[1]].getBateau().getPosition()[i].isEstDetruite()){
+					verifDetruit++;
+				}
+			}
+			if(verifDetruit == joueurModel.getGrilleJeu().getTabCase()[valeurs[0]][valeurs[1]].getBateau().getTaille()){
+				joueurModel.setNbBateauDetruit(joueurModel.getNbBateauDetruit()+1);
+				if(joueurModel.getNbBateauDetruit() == 6){
+					Main.finJeu = true;
+					
+				}
+				return "TOUCHECOULE";
+			}
+			else{
+				return "TOUCHE";
+			}
 			
 		}
 		else{
-			joueurModel.getGrilleJeu().getTabCase()[valeurs[0]][valeurs[1]].setEstDetruite(true);
+			joueurModel.getGrilleJeu().setEstDetruite(true,valeurs[0],valeurs[1]);
 			return "RATE";
 		}
 	}
@@ -87,21 +135,108 @@ public class BatailleController {
 		}
 		return true;
 	}
+	/**
+	 * Cette méthode met a jour la grille cible lorsque l'on recoit confirmation des degats causes
+	 * @param rep est la réponse de l'adversaire
+	 * @param msg est la localisation de la case dans la grille que l'on souhaite détruire
+	 */
 	public void updateGrilleCible(String rep,String msg){
 		int [] resultat;
 		resultat = decodeur(msg);
-		if(rep.equals("TOUCHE")){ //veut dire que l'on a touche !
-			joueurModel.getGrilleCible().getTabCase()[resultat[0]][resultat[1]].setEstUtilisee(true);
-			joueurModel.getGrilleCible().getTabCase()[resultat[0]][resultat[1]].setEstDetruite(true);
+		if(rep.equals("TOUCHE") || rep.equals("TOUCHECOULE")){ //veut dire que l'on a touche !
+			joueurModel.getGrilleCible().getTabCase()[resultat[1]][resultat[0]].setEstUtilisee(true);
+			joueurModel.getGrilleCible().setEstDetruite(true, resultat[1], resultat[0]);
 		}
 		else{
-			joueurModel.getGrilleCible().getTabCase()[resultat[0]][resultat[1]].setEstUtilisee(false);
-			joueurModel.getGrilleCible().getTabCase()[resultat[0]][resultat[1]].setEstDetruite(true);
+			joueurModel.getGrilleCible().getTabCase()[resultat[1]][resultat[0]].setEstUtilisee(false);
+			joueurModel.getGrilleCible().setEstDetruite(true, resultat[1], resultat[0]);
 		}
 	}
 	
+	public void updateGrilleCible(String rep,int[] resultat){
+		
+		if(rep.equals("TOUCHE") || rep.equals("TOUCHECOULE")){ //veut dire que l'on a touche !
+			joueurModel.getGrilleCible().getTabCase()[resultat[1]][resultat[0]].setEstUtilisee(true);
+			joueurModel.getGrilleCible().setEstDetruite(true, resultat[1], resultat[0]);
+		}
+		else{
+			joueurModel.getGrilleCible().getTabCase()[resultat[1]][resultat[0]].setEstUtilisee(false);
+			joueurModel.getGrilleCible().setEstDetruite(true, resultat[1], resultat[0]);
+		}
+	}
 	
+	/**
+	 * Permet au joueur d'effectuer un tir en envoyant l'information sur le socket.
+	 * La methode attend alors la confirmation !
+	 * @param valeur
+	 */
+	public String tirer(String valeur){ //valeur = D-5
+		joueurModel.setSonTour(false);
+		int[] valeurNum = new int[2];
+		valeurNum = decodeur(valeur); //valeurNum = 4-5
+		
+		String valeurString = valeurNum[0]+"-"+valeurNum[1];
+		Main.chat.sendMessage(valeurString);
+		String confirm = attendreConfirmation();
+		
+		updateGrilleCible(confirm,valeur); //update
+		if(confirm.equals("TOUCHECOULE")){
+			System.out.println("Touché. Navire coulé");
+		}
+		else{
+			System.out.println(confirm);
+		}
+		return confirm;
+	}
 	
+	public String tirer(int[] valeur){
+		joueurModel.setSonTour(false);
+		String tir = valeur[0]+"-"+valeur[1];
+		Main.chat.sendMessage(tir);
+		String confirm = attendreConfirmation();
+		
+		updateGrilleCible(confirm,valeur); //update
+		if(confirm.equals("TOUCHECOULE")){
+			System.out.println("Touché. Navire coulé");
+		}
+		else{
+			System.out.println(confirm);
+		}
+		return confirm;
+	}
+	public String attendreConfirmation(){
+		String confirm = null;
+		try {
+			confirm = Main.chat.waitForMessage();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return confirm;
+	}
+	
+	/**
+	 * Cette méthode renvoie la valeur de la case ciblée par l'adversaire.
+	 * @return
+	 */
+	public int[] attendreTirAdverse(){
+		String tir = null;
+		int[] tirInt = new int[2];
+		try {
+			tir = Main.chat.waitForMessage();
+			String [] tirString = new String[2];
+			tirString = tir.split("-");
+			tirInt[0] = Integer.parseInt(tirString[0]);
+			tirInt[1] = Integer.parseInt(tirString[1]);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Main.chat.sendMessage(verifierDegats(tirInt));
+		joueurModel.setSonTour(true);
+		
+		return tirInt;
+	}
 	
 	/**
 	 * Transforme une entrée utilisateur (par exemple A-5) en indice pour le tableau à 2 dimensions
@@ -222,16 +357,16 @@ public void afficherGrilleCible(){
 					}
 				}
 				else{
-					if(!joueurModel.getGrilleCible().getTabCase()[i][j].isEstUtilisee() && !joueurModel.getGrilleCible().getTabCase()[i][j].isEstDetruite()){
+					if(!joueurModel.getGrilleCible().getTabCase()[j][i].isEstUtilisee() && !joueurModel.getGrilleCible().getTabCase()[j][i].isEstDetruite()){
 						System.out.print("~  ");
 					}
-					else if(joueurModel.getGrilleCible().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleCible().getTabCase()[i][j].isEstDetruite()){
+					else if(joueurModel.getGrilleCible().getTabCase()[j][i].isEstUtilisee() && joueurModel.getGrilleCible().getTabCase()[j][i].isEstDetruite()){
 						System.out.print("T  ");
 					}
-					else if(joueurModel.getGrilleCible().getTabCase()[i][j].isEstUtilisee()){
+					else if(joueurModel.getGrilleCible().getTabCase()[j][i].isEstUtilisee()){
 						System.out.print("~  "); //Le joueur ne peut pas voir la posision de navires ennemis 
 					}
-					else if(!joueurModel.getGrilleCible().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleCible().getTabCase()[i][j].isEstDetruite()){
+					else if(!joueurModel.getGrilleCible().getTabCase()[j][i].isEstUtilisee() && joueurModel.getGrilleCible().getTabCase()[j][i].isEstDetruite()){
 						System.out.print("X  ");
 					}
 				}	
