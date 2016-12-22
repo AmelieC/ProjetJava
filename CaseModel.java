@@ -29,6 +29,8 @@ public class CaseModel extends Observable {
 		
 		this.coordonneeX=coordonneeX;
 		this.coordonneeY=coordonneeY;
+		this.estUtilisee = false;
+		this.estDetruite = false;
 		
 	}
 
@@ -60,9 +62,12 @@ public class CaseModel extends Observable {
 	}
 	public boolean isEstDetruite() {
 		return estDetruite;
+	
 	}
 	public void setEstDetruite(boolean estDetruite) {
 		this.estDetruite = estDetruite;
+		setChanged();
+		notifyObservers();
 		
 	}
 	public BateauModel getBateau() {
