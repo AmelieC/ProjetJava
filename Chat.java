@@ -1,7 +1,6 @@
 package default_package;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -9,10 +8,13 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import model.JoueurModel;
+
 public class Chat {
 	BufferedReader in; 
 	PrintWriter outB;
 	Socket socket;
+	private JoueurModel joueurModel ;
 	
 	/*
 	 * Constructeur.  Permet d'initialiser le chat en établissant la 
@@ -21,8 +23,10 @@ public class Chat {
 	 * @port le numéro de port sur lequel établir la connexion
 	 * @exception IOException s'il y a un problème pendant l'établissement de la connexion
 	 */
-	public Chat(boolean isServer, int port) throws IOException {
-			connect(isServer, port, "10.99.0.87");
+	public Chat(boolean isServer, int port,String ip) throws IOException {
+			
+			connect(isServer, port, ip);
+			
 		
 	}
 	
