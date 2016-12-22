@@ -19,18 +19,8 @@ public class GrilleJeuModel extends Observable{
 	public GrilleJeuModel(int nbColonnes,int nbLignes){
 		tabCase=new CaseModel[100][100];
 		for(int i=0;i<nbLignes;i++){
-			for(int j=0;j<nbColonnes;j++){
-				if(i==0){
-					tabCase[i][j]=new CaseModel();
-				}
-				else{
-					if(j==0){
-						tabCase[i][j]=new CaseModel();
-					}
-					else{
-						tabCase[i][j]=new CaseModel();
-					}
-				}
+			for(int j=0;j<nbColonnes;j++){	
+				tabCase[i][j]=new CaseModel();
 				
 			}
 		}
