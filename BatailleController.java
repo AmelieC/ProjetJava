@@ -53,6 +53,10 @@ public class BatailleController {
 	public boolean positionner(String valeur,int indiceBateau,int nbBateau){
 		int [] resultat;
 		resultat = decodeur(valeur);
+		if(resultat[0] == 100 && resultat[1] == 100){
+			System.out.println("Entree invalide...");
+			return false;
+		}
 		if(!verifPosition(resultat)){
 			System.out.println("Case deja occupee");
 			return false;
@@ -246,9 +250,17 @@ public class BatailleController {
 	public int[] decodeur(String entree){
 		String tab[]=new String [2];
 		int Resultat[]= new int[2];
-		
+	
 		tab=entree.split("-");
-		Resultat[1]=Integer.parseInt(tab[1]);
+		
+		try{
+			Resultat[1]=Integer.parseInt(tab[1]);
+		}catch(Exception e){
+
+			Resultat[0] = 100;
+			Resultat[1] = 100;
+			return Resultat;
+		}
 		if(tab[0].length()==1){//exemple (A-10)
 			for(String lettre:Main.alphabet){
 				if(lettre.equals(tab[0])){
@@ -271,6 +283,12 @@ public class BatailleController {
 				}
 			}
 			
+		}
+		if(Resultat[0] >= Main.nbLignes || Resultat[1]>= Main.nbColonnes){
+			Resultat[0] = 100;
+			Resultat[1] = 100;
+			
+			return Resultat;
 		}
 		return Resultat;
 		
@@ -424,4 +442,3 @@ public static void positionOrdinateur(JoueurModel joueur){
 }
 	
 }
-
