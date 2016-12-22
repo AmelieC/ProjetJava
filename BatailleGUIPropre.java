@@ -2,7 +2,6 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -68,7 +67,6 @@ public class BatailleGUIPropre extends BatailleVueGUI{
 				if(i==0 || j==0){
 					BouttonMarge button = new BouttonMarge();
 					String text = String.valueOf(j);
-					
 					button.getButton().setFont(new Font("Lucida Grande", Font.PLAIN, 3));
 					button.getButton().setText(text);
 					
@@ -93,7 +91,7 @@ public class BatailleGUIPropre extends BatailleVueGUI{
 					button.getButton().addMouseListener(new java.awt.event.MouseAdapter() {
 					    @SuppressWarnings("deprecation")
 						public void mouseEntered(java.awt.event.MouseEvent evt) {
-					    	if(!button.cochee){
+					    	if(!button.cochee  && !joueurModel.getGrilleJeu().getTabCase()[button.getPosx()][button.getPosy()].isEstDetruite()){
 					    		
 					    			tabBoutton[button.getPosy()][1].getButton().setBackground(new Color(214, 53, 32));
 					    			tabBoutton[button.getPosy()][Main.nbLignes-1].getButton().setBackground(new Color(214, 53, 32));
@@ -105,7 +103,7 @@ public class BatailleGUIPropre extends BatailleVueGUI{
 					    			
 					    	
 					    	}
-					    	else{
+					    	if(button.cochee){
 					    		tabBoutton[button.getPosy()][1].getButton().setBackground(new Color(44, 44, 45));
 				    			tabBoutton[button.getPosy()][Main.nbLignes-1].getButton().setBackground(new Color(44, 44, 45));
 				    		
@@ -120,24 +118,39 @@ public class BatailleGUIPropre extends BatailleVueGUI{
 
 					    public void mouseExited(java.awt.event.MouseEvent evt) {
 					    	if(!button.cochee){
-					    		tabBoutton[button.getPosy()][1].getButton().setBackground(new Color(153, 35, 0));
-				    			tabBoutton[button.getPosy()][Main.nbLignes-1].getButton().setBackground(new Color(153, 35, 0));
-				    		
-				    			tabBoutton[button.getPosy()][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
-				    			
-				    			tabBoutton[1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
-				    			tabBoutton[Main.nbColonnes-1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
-				    		
-				    	
+					    		if(!joueurModel.getGrilleJeu().getTabCase()[button.getPosx()][button.getPosy()].isEstDetruite()){
+					    			//case rouge
+					    			tabBoutton[button.getPosy()][1].getButton().setBackground(new Color(153, 35, 0));
+					    			tabBoutton[button.getPosy()][Main.nbLignes-1].getButton().setBackground(new Color(153, 35, 0));
+					    		
+					    			tabBoutton[button.getPosy()][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
+					    			
+					    			tabBoutton[1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
+					    			tabBoutton[Main.nbColonnes-1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
+					    		}
+					    		
 					    	}
 					    	else{
-					    		tabBoutton[button.getPosy()][1].getButton().setBackground(new Color(153, 35, 0));
-				    			tabBoutton[button.getPosy()][Main.nbLignes-1].getButton().setBackground(new Color(153, 35, 0));
-				    		
-					    		button.getButton().setBackground(new Color(71, 67, 64));
+					    		if(!joueurModel.getGrilleJeu().getTabCase()[button.getPosx()][button.getPosy()].isEstDetruite()){
+					    			//grise (bateau)
+						    		tabBoutton[button.getPosy()][1].getButton().setBackground(new Color(153, 35, 0));
+					    			tabBoutton[button.getPosy()][Main.nbLignes-1].getButton().setBackground(new Color(153, 35, 0));
 					    		
-					    		tabBoutton[1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
-				    			tabBoutton[Main.nbColonnes-1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
+						    		button.getButton().setBackground(new Color(71, 67, 64));
+						    		
+						    		tabBoutton[1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
+					    			tabBoutton[Main.nbColonnes-1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
+					    		}
+					    		else{
+					    			//case noire
+					    			tabBoutton[button.getPosy()][1].getButton().setBackground(new Color(153, 35, 0));
+					    			tabBoutton[button.getPosy()][Main.nbLignes-1].getButton().setBackground(new Color(153, 35, 0));
+					    		
+						    		button.getButton().setBackground(new Color(0,0,0));
+						    		
+						    		tabBoutton[1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
+					    			tabBoutton[Main.nbColonnes-1][button.getPosx()].getButton().setBackground(new Color(153, 35, 0));
+					    		}
 					    	}
 					    	
 					    }
@@ -148,7 +161,7 @@ public class BatailleGUIPropre extends BatailleVueGUI{
 								int [] tab = new int[2];
 								tab[0]=button.getPosx();
 								tab[1]=button.getPosy();
-								
+								button.setCochee(true);
 								if(controller.positionner(tab,joueurModel.getCaseBateauAPositioner(),joueurModel.getIndiceBateauAPositionner())){
 									button.getButton().setBackground(new Color(71, 67, 64));
 									button.setCochee(true);
@@ -197,13 +210,37 @@ public class BatailleGUIPropre extends BatailleVueGUI{
 				}
 				else if(joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleJeu().getTabCase()[i][j].isEstDetruite()){
 					tabBoutton[j][i].getButton().setBackground(new Color(0, 0, 0));
+					tabBoutton[j][i].setCochee(true);
 				}
 				else if(!joueurModel.getGrilleJeu().getTabCase()[i][j].isEstUtilisee() && joueurModel.getGrilleJeu().getTabCase()[i][j].isEstDetruite()){
-					//tabBoutton[j][i].getButton().setBackground(new Color(0, 47, 135));
+					//case bleu
+					tabBoutton[j][i].getButton().setBackground(new Color(0, 47, 135));
 				}
 			}
 			
 		}
+		if(Main.finJeu){
+			if(joueurModel.getNbBateauDetruit() == 6){
+				System.out.println("VOUS AVEZ PERDU....");	
+				try {
+					Thread.sleep(3000);
+					System.out.println("Merci d'avoir joué !");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else{
+				System.out.println("VOUS AVEZ GAGNE....");	
+				try {
+					Thread.sleep(3000);
+					System.out.println("Merci d'avoir joué !");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}	
 		
 		
 	}
