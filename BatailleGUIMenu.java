@@ -1,6 +1,6 @@
-//Avec image en background.
+//Avec image en background. Pas eu le temps de l'implémenter.
 
-package default_package;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -116,7 +116,7 @@ public class MenuBataille extends JFrame {
 		panel.add(chckbxMusique);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\JOE\\Desktop\\PM400x500px.png"));
+		label.setIcon(new ImageIcon("PM400x500px.png"));
 		label.setBounds(0, 0, 374, 452);
 		panel.add(label);
 	}
